@@ -9,6 +9,14 @@ from analyzer.scoring import calculate_risk_score
 def analyze_email(file_path: str) -> dict:
     """
     Run the complete phishing email analysis pipeline.
+
+    The analysis consists of:
+    - Email parsing
+    - Header authentication analysis
+    - IOC extraction
+    - URL analysis
+    - Email content analysis
+    - Risk scoring
     """
 
     # Parse email
@@ -26,27 +34,54 @@ def analyze_email(file_path: str) -> dict:
     for url in iocs["urls"]:
         url_results.append(analyze_url(url))
 
-    # Analyze content
+    # Analyze email content
     content_results = analyze_content(email["body"])
 
-    # Calculate header + URL risk
-    risk_results = calculate_risk_score(
-        header_results,
-        url_results,
-    )
+    # Calculate individual component scores
+    #
+    # Header score is calculated separately from URL score.
+    # This prevents the URL score from being counted twice.
+    header_score = 0
 
-    # Calculate component scores
-    header_score = risk_results["score"]
+    if header_results.get("spf") == "fail":
+        header_score += 20
 
+    if header_results.get("dkim") == "fail":
+        header_score += 20
+
+    if header_results.get("dmarc") == "fail":
+        header_score += 15
+
+    if header_results.get("reply_to_mismatch"):
+        header_score += 15
+
+    if header_results.get("return_path_mismatch"):
+        header_score += 10
+
+    # Header contribution is capped at 40 points.
+    header_score = min(header_score, 40)
+
+    # Calculate URL score.
+    #
+    # Each individual URL can contribute up to 30 points.
+    # The total URL contribution is capped at 30.
     url_score = sum(
-        result["score"]
+        min(result.get("score", 0), 30)
         for result in url_results
     )
 
-    content_score = content_results["score"]
+    url_score = min(url_score, 30)
 
+    # Content score is capped at 30.
+    content_score = min(
+        content_results.get("score", 0),
+        30,
+    )
+
+    # Calculate final score.
     raw_score = (
         header_score
+        + url_score
         + content_score
     )
 
@@ -61,6 +96,16 @@ def analyze_email(file_path: str) -> dict:
         severity = "SUSPICIOUS"
     else:
         severity = "LOW"
+
+    # Generate risk findings.
+    #
+    # calculate_risk_score() is still used here to generate
+    # authentication/header and URL findings.
+    risk_results = calculate_risk_score(
+        header_results,
+        url_results,
+        content_score=content_score,
+    )
 
     # Combine findings
     findings = (
