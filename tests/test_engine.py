@@ -16,14 +16,25 @@ def test_complete_email_analysis():
     assert "micros0ft-support.com" in result["iocs"]["domains"]
 
     assert len(result["urls"]) == 1
-    assert result["urls"][0]["brand_impersonation"]["detected"] is True
+
+    assert (
+        result["urls"][0]["brand_impersonation"]["detected"]
+        is True
+    )
 
     assert result["content"]["score"] > 0
 
     assert result["risk"]["score"] > 0
+
     assert result["risk"]["severity"] in {
         "LOW",
         "SUSPICIOUS",
         "HIGH",
         "CRITICAL",
     }
+
+    assert "breakdown" in result["risk"]
+
+    assert "header" in result["risk"]["breakdown"]
+    assert "url" in result["risk"]["breakdown"]
+    assert "content" in result["risk"]["breakdown"]

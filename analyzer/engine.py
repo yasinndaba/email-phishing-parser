@@ -9,54 +9,64 @@ from analyzer.scoring import calculate_risk_score
 def analyze_email(file_path: str) -> dict:
     """
     Run the complete phishing email analysis pipeline.
-
-    Args:
-        file_path: Path to an .eml file.
-
-    Returns:
-        Complete analysis results.
     """
 
-    # Step 1: Parse email
+    # Parse email
     email = parse_email(file_path)
 
-    # Step 2: Analyze headers
+    # Analyze headers
     header_results = analyze_headers(email)
 
-    # Step 3: Extract IOCs
+    # Extract IOCs
     iocs = extract_iocs(email)
 
-    # Step 4: Analyze every extracted URL
+    # Analyze URLs
     url_results = []
 
     for url in iocs["urls"]:
-        result = analyze_url(url)
-        url_results.append(result)
+        url_results.append(analyze_url(url))
 
-    # Step 5: Analyze email content
+    # Analyze content
     content_results = analyze_content(email["body"])
 
-    # Step 6: Calculate overall risk
+    # Calculate header + URL risk
     risk_results = calculate_risk_score(
         header_results,
         url_results,
     )
 
-    # Step 7: Add content risk to overall score
-    total_score = min(
-        risk_results["score"] + content_results["score"],
-        100,
+    # Calculate component scores
+    header_score = risk_results["score"]
+
+    url_score = sum(
+        result["score"]
+        for result in url_results
     )
 
-    # Recalculate severity using final score
-    if total_score >= 80:
+    content_score = content_results["score"]
+
+    raw_score = (
+        header_score
+        + content_score
+    )
+
+    final_score = min(raw_score, 100)
+
+    # Determine severity
+    if final_score >= 80:
         severity = "CRITICAL"
-    elif total_score >= 60:
+    elif final_score >= 60:
         severity = "HIGH"
-    elif total_score >= 30:
+    elif final_score >= 30:
         severity = "SUSPICIOUS"
     else:
         severity = "LOW"
+
+    # Combine findings
+    findings = (
+        risk_results["findings"]
+        + content_results["findings"]
+    )
 
     return {
         "email": email,
@@ -65,11 +75,14 @@ def analyze_email(file_path: str) -> dict:
         "urls": url_results,
         "content": content_results,
         "risk": {
-            "score": total_score,
+            "score": final_score,
+            "raw_score": raw_score,
             "severity": severity,
-            "findings": (
-                risk_results["findings"]
-                + content_results["findings"]
-            ),
+            "breakdown": {
+                "header": header_score,
+                "url": url_score,
+                "content": content_score,
+            },
+            "findings": findings,
         },
     }

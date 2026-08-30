@@ -67,6 +67,14 @@ def main() -> None:
     print(f"\nVERDICT:    {risk['severity']}")
     print(f"RISK SCORE: {risk['score']}/100")
 
+    breakdown = risk.get("breakdown", {})
+
+    print("\nScore Breakdown:")
+    print(f"  Header Risk:  {breakdown.get('header', 0)}")
+    print(f"  URL Risk:     {breakdown.get('url', 0)}")
+    print(f"  Content Risk: {breakdown.get('content', 0)}")
+    print(f"  Raw Score:    {risk.get('raw_score', risk['score'])}")
+
     # --------------------------------
     # Email information
     # --------------------------------
