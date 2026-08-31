@@ -1,0 +1,17 @@
+From: Security Notification <notification@security-example.com>
+To: analyst@example.com
+Reply-To: notification@security-example.com
+Return-Path: <notification@security-example.com>
+Subject: Security Notification
+Date: Mon, 31 Aug 2026 09:10:00 +0000
+Message-ID: <suspicious-url-test@example.com>
+Authentication-Results: mx.example.com; spf=pass; dkim=pass; dmarc=pass
+Content-Type: text/plain; charset="UTF-8"
+
+Your security settings require confirmation.
+
+Please verify your account:
+
+https://secure-login.example/verify/account
+
+Thank you.

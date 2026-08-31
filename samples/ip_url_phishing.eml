@@ -1,0 +1,17 @@
+From: Account Security <security@example.com>
+To: analyst@example.com
+Reply-To: security@example.com
+Return-Path: <security@example.com>
+Subject: Urgent Account Verification
+Date: Mon, 31 Aug 2026 09:15:00 +0000
+Message-ID: <ip-url-test@example.com>
+Authentication-Results: mx.example.com; spf=fail; dkim=pass; dmarc=fail
+Content-Type: text/plain; charset="UTF-8"
+
+URGENT: Your account requires verification.
+
+Please confirm your identity immediately:
+
+http://192.0.2.10/verify
+
+Failure to complete verification may result in account suspension.

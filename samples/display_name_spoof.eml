@@ -1,0 +1,19 @@
+From: Microsoft Security <security@evil-example.com>
+To: analyst@example.com
+Reply-To: security@evil-example.com
+Return-Path: <security@evil-example.com>
+Subject: Microsoft Security Alert
+Date: Mon, 31 Aug 2026 09:05:00 +0000
+Message-ID: <display-spoof-test@example.com>
+Authentication-Results: mx.example.com; spf=fail; dkim=fail; dmarc=fail
+Content-Type: text/plain; charset="UTF-8"
+
+Microsoft Security Alert
+
+We detected suspicious activity on your account.
+
+Please review your account immediately:
+
+https://evil-example.com/security
+
+If you do not verify your account, access may be restricted.

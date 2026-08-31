@@ -1,0 +1,26 @@
+From: Finance Department <finance@evil-example.com>
+To: analyst@example.com
+Reply-To: finance@evil-example.com
+Return-Path: <finance@evil-example.com>
+Subject: Urgent Invoice Document
+Date: Mon, 31 Aug 2026 09:20:00 +0000
+Message-ID: <attachment-test@example.com>
+Authentication-Results: mx.example.com; spf=fail; dkim=fail; dmarc=fail
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="BOUNDARY"
+
+--BOUNDARY
+Content-Type: text/plain; charset="UTF-8"
+
+Please review the attached invoice immediately.
+
+Failure to process this document may result in account suspension.
+
+--BOUNDARY
+Content-Type: application/octet-stream
+Content-Disposition: attachment; filename="invoice.exe"
+
+MZ
+SYNTHETIC-TEST-DATA-DO-NOT-EXECUTE
+
+--BOUNDARY--
