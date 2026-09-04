@@ -584,7 +584,7 @@ Testing is treated as part of the detection-engineering workflow so that changes
 Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone repository-url](https://github.com/yasinndaba/email-phishing-parser
 cd email-phishing-parser
 ```
 
