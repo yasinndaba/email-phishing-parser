@@ -8,6 +8,24 @@ The project is designed as a practical **Blue Team / SOC Analyst portfolio proje
 
 ---
 
+## Demo
+
+### Phishing Email Analysis
+
+![Phishing Email Analyzer CLI](screenshots/cli-analysis.png)
+
+The analyzer identified the sample email as CRITICAL with a risk
+score of 97/100.
+
+### Automated Testing
+
+![Pytest Results](screenshots/tests-passed.png)
+
+The project currently includes 50 automated tests covering the
+core analysis pipeline.
+
+---
+
 ## Features
 
 The analyzer currently supports:
